@@ -1,0 +1,45 @@
+@Library('Jenkins-Shared-Library-01') _
+
+pipeline {
+    agent any
+
+    options { 
+        skipDefaultCheckout true 
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps() 
+        ansiColor('xterm')   // plugin: "AnsiColor"
+    }
+
+    environment {
+                      // Git Variables //
+     MY_GIT_URL                = "https://github.com/vaheedgithubac/DevOps-Project-Two-Tier-Flask-App.git"
+     MY_GIT_BRANCH             = ""                 // Defaults to "main" 
+     MY_GIT_CREDENTIALS_ID     = ""
+     MY_GIT_LATEST_COMMIT_ID   = getShortCommit()  // <-- calls call() from shared library
+
+                      // Project Variables //
+     PROJECT_NAME              = "myapp"
+     PROJECT_KEY               = "myapp"
+     COMPONENT                 = "backend"
+
+                      // Trivy Variables //   
+     TRIVY_IMAGE_REPORT_FORMAT       = "table"
+     TRIVY_FILE_SYSTEM_REPORT_FORMAT = "table"
+    }
+
+    stages {
+        stage ("PRINT LATEST COMMIT ID") {
+            steps {
+                echo "Latest Commit ID: ${env.MY_GIT_LATEST_COMMIT_ID}"
+            }
+        }
+        stage("GIT CHECKOUT") {
+           steps {
+              script { git_checkout() }
+           }
+        }
+
+
+    }
+}
