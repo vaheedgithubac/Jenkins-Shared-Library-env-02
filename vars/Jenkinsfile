@@ -17,7 +17,7 @@ pipeline {
      MY_GIT_REPO_TYPE          = "public"
      MY_GIT_CREDENTIALS_ID     = ""
      MY_GIT_BRANCH             = ""   // Defaults to "main" 
-     MY_GIT_LATEST_COMMIT_ID   = getShortCommit()  // <-- calls call() from shared library
+     MY_GIT_LATEST_COMMIT_ID   = get_latest_short_commit()  // <-- calls call() from shared library
 
                       // Project Variables //
      PROJECT_NAME              = "myapp"
