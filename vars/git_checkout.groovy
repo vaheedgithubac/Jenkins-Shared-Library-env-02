@@ -2,8 +2,8 @@ def call(Map config = [:]) {
 
     // Required config parameters
     def requiredEnvParams = [
-        "MY_GIT_REPO_TYPE",
-        "MY_GIT_URL"
+        "MY_GIT_URL", 
+        "MY_GIT_REPO_TYPE"
     ]
 
     // Validate required parameters
