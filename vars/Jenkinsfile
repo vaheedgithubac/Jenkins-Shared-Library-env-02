@@ -30,17 +30,7 @@ pipeline {
     }
 
     stages {
-        stage ("PRINT LATEST COMMIT ID") {
-            steps {
-                echo "Latest Commit ID: ${env.MY_GIT_LATEST_COMMIT_ID}"
-            }
-        }
-        stage("GIT CHECKOUT") {
-           steps {
-              script { git_checkout() }
-           }
-        }
-
-
+        stage ("PRINT LATEST COMMIT ID") { steps { script { echo "Latest Commit ID: ${env.MY_GIT_LATEST_COMMIT_ID}" } } }
+        stage("GIT CHECKOUT") { steps { script { git_checkout() } } }
     }
 }
