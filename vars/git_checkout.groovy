@@ -1,10 +1,7 @@
 def call(Map config = [:]) {
 
     // Required config parameters
-    def requiredEnvParams = [
-        "MY_GIT_URL", 
-        "MY_GIT_REPO_TYPE"
-    ]
+    def requiredEnvParams = [ "MY_GIT_URL", "MY_GIT_REPO_TYPE" ]
 
     // Validate required parameters
     requiredEnvParams.each { key ->
@@ -17,7 +14,7 @@ def call(Map config = [:]) {
     def my_git_url       = config.MY_GIT_URL
 
 
-    // === Handle credentials === //
+    // === Handle credentials === 
     if (my_git_repo_type == "public") {
         echo "⚡ Public repo detected, setting MY_GIT_CREDENTIALS_ID = null"
         env.MY_GIT_CREDENTIALS_ID = null
@@ -31,19 +28,19 @@ def call(Map config = [:]) {
     else { error "❌ MY_GIT_REPO_TYPE must be 'public' or 'private'. Current: '${config.MY_GIT_REPO_TYPE}'" }
 
 
-    // === Set Default Branch === //
+    // === Set Default Branch to 'main' === 
     if (!env.MY_GIT_BRANCH || env.MY_GIT_BRANCH.trim() == "") {
-        echo "⚡ MY_GIT_BRANCH not defined, setting default to 'main'"
+        echo "⚡ MY_GIT_BRANCH not defined, setting default branch to 'main'"
         env.MY_GIT_BRANCH = "main"
     }
 
-    // Log final values
-    echo "✔ MY_GIT_REPO_TYPE = ${my_git_repo_type}"
-    echo "✔ MY_GIT_URL = ${my_git_url}"
-    echo "✔ MY_GIT_BRANCH = ${env.MY_GIT_BRANCH}"
+    // === Log final values === 
+    echo "✔ MY_GIT_URL            = ${my_git_url}"
+    echo "✔ MY_GIT_REPO_TYPE      = ${my_git_repo_type}"
+    echo "✔ MY_GIT_BRANCH         = ${env.MY_GIT_BRANCH}"
     echo "✔ MY_GIT_CREDENTIALS_ID = ${env.MY_GIT_CREDENTIALS_ID}"
 
-    // === Perform Git Checkout === //
+    // === Perform Git Checkout === 
     git(
         url: my_git_url,
         branch: env.MY_GIT_BRANCH,
