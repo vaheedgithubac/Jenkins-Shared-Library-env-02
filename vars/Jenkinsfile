@@ -14,7 +14,7 @@ pipeline {
     environment {
                       // Git Variables //
      MY_GIT_URL                = "https://github.com/vaheedgithubac/DevOps-Project-Two-Tier-Flask-App.git"
-     MY_GIT_BRANCH             = ""                 // Defaults to "main" 
+     MY_GIT_BRANCH             = ""   // Defaults to "main" 
      MY_GIT_CREDENTIALS_ID     = ""
      MY_GIT_LATEST_COMMIT_ID   = getShortCommit()  // <-- calls call() from shared library
 
