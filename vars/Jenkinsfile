@@ -8,29 +8,48 @@ pipeline {
         disableConcurrentBuilds()
         timeout(time: 30, unit: 'MINUTES')
         timestamps() 
-        ansiColor('xterm')   // plugin: "AnsiColor"
+        ansiColor('xterm')                                  // plugin: "AnsiColor"
     }
 
     environment {
-                      // Git Variables //
+                      // ## Project Variables ##
+     PROJECT_NAME              = "myapp"                    // Must be set according
+     PROJECT_KEY               = "myapp"                    // Must be set according
+     COMPONENT                 = "backend"                  // Must be set according
+        
+                      // ## Git Variables ## 
      MY_GIT_URL                = "https://github.com/vaheedgithubac/DevOps-Project-Two-Tier-Flask-App.git"
-     MY_GIT_REPO_TYPE          = "public"
-     MY_GIT_CREDENTIALS_ID     = ""
-     MY_GIT_BRANCH             = ""   // Defaults to "main" 
+     MY_GIT_REPO_TYPE          = "public"                   // public or private
+     MY_GIT_CREDENTIALS_ID     = ""                         // Should be set for private repos
+     MY_GIT_BRANCH             = ""                         // Defaults to "main" if not set
      MY_GIT_LATEST_COMMIT_ID   = get_latest_short_commit()  // <-- calls call() from shared library
+                              
+                      // ## Trivy FS Variables ##  
+     MODE                      = "fs"                       // fs --- file system 
+     TARGET                    = "."                        // Defaults to "." current directory
+     OUTPUT_REPORT_FORMAT      = "table"                    // table/json/sarif/yaml
 
-                      // Project Variables //
-     PROJECT_NAME              = "myapp"
-     PROJECT_KEY               = "myapp"
-     COMPONENT                 = "backend"
-
-                      // Trivy Variables //   
-     TRIVY_IMAGE_REPORT_FORMAT       = "table"
-     TRIVY_FILE_SYSTEM_REPORT_FORMAT = "table"
+                      // ## Trivy IMAGE Variables ##  
+     MODE                      = "image"                    // image scan
+     TARGET                    = ""                         // Should be set in stage
+     OUTPUT_REPORT_FORMAT      = "table"                    // table/json/sarif/yaml
+     
     }
 
     stages {
-        stage ("PRINT LATEST COMMIT ID") { steps { script { echo "Latest Commit ID: ${env.MY_GIT_LATEST_COMMIT_ID}" } } }
-        stage("GIT CHECKOUT") { steps { script { git_checkout() } } }
+        stage ("PRINT LATEST COMMIT ID") { steps { script { echo "Latest Commit ID: ${env.MY_GIT_LATEST_COMMIT_ID}" } } } 
+
+        stage ("GIT CHECKOUT") { steps { script { git_checkout() } } }
+
+        stage ("TRIVY - FILE SYSTEM SCAN") { steps { script { trivy_scan() } } }
+
+        stage ("TRIVY - IMAGE SCAN") {
+            steps {
+                script {
+                    env.TARGET = ""   // image name with Tag should be set here 
+                    trivy_scan()
+                }
+            }
+        }
     }
 }
