@@ -1,0 +1,58 @@
+def call(Map config = [:]) {
+
+    def required = [
+        "GIT_COMMITTER_NAME", 
+        "GIT_COMMITTER_EMAIL",
+        "DEPLOY_GITHUB_CREDENTIALS",
+        "DEPLOY_GITHUB_REPO_NAME",
+        "IMAGE_NAME",
+        "DEPLOYMENT_FILE",
+        "DEPLOYMENT_FILE_GIT_BRANCH"
+    ]
+
+    required.each { key ->
+        if (!config[key]) {
+            error "❌ GitHub: Missing required parameter '${key}'"
+        }
+    }
+    
+    
+    def git_config_username  = config.GIT_COMMITTER_NAME
+    def git_config_email     = config.GIT_COMMITTER_EMAIL
+    def github_username      = config.DEPLOY_GITHUB_CREDENTIALS_USR
+    def github_token         = config.GITHUB_TOKEN_PSW
+    def git_latest_commit_id = env.MY_GIT_LATEST_COMMIT_ID
+    def github_repo_name     = config.DEPLOY_GITHUB_REPO_NAME
+    def image_name           = config.IMAGE_NAME
+    def deployment_file      = config.DEPLOYMENT_FILE
+    def branch               = config.DEPLOYMENT_FILE_GIT_BRANCH ?: 'main'
+
+    // === CONFIGURE GIT ===
+    
+    sh "git config user.name '${git_config_username}'"
+    sh "git config user.email '${git_config_email}'"
+    
+
+    // === ENSURE CLEAN WORKSPACE ===
+    sh "git checkout ${branch}"
+    sh "git pull origin ${branch}"
+
+    // === PRINTING COMMIT HASH ===
+    echo "Using Commit Hash: ${git_latest_commit_id}"
+
+    // === UPDATE DEPLOYMENT FILE ===
+    echo "Updating ${deployment_file} to use image tag: ${git_latest_commit_id}"
+
+    sh """
+        sed -i.bak 's#image: ${image_name}:.*#image: ${image_name}:${git_latest_commit_id}#' ${deployment_file}
+    """
+
+    // === COMMIT AND PUSH ===
+    sh """
+        git add ${deployment_file}
+        git commit -m 'chore: update image tag to ${git_latest_commit_id}' || echo 'No changes to commit'
+        git push https://${github_username}:${github_token}@github.com/${github_username}/${github_repo_name}.git ${branch}
+    """
+
+    echo "✅ Deployment file successfully updated and pushed to ${branch}"
+}
