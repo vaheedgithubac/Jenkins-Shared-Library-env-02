@@ -12,82 +12,113 @@ pipeline {
     }
 
     environment {
-                      // ## Project Variables ##
+                      // Project Variables //
      PROJECT_NAME              = "myapp"                    // required
      PROJECT_KEY               = "myapp"                    // required
      COMPONENT                 = "backend"                  // required
         
-                      // ## Git Variables ## 
+                      // Git Variables //
      MY_GIT_URL                = "https://github.com/vaheedgithubac/DevOps-Project-Two-Tier-Flask-App.git"
      MY_GIT_REPO_TYPE          = "public"                   // required (public or private)
      MY_GIT_CREDENTIALS_ID     = ""                         // required for private repos
      MY_GIT_BRANCH             = ""                         // Defaults to "main" if not set
      MY_GIT_LATEST_COMMIT_ID   = get_latest_short_commit()  // <-- calls call() from shared library
-
-                      // ## Jacoco Variables ## 
+     
+                      // Jacoco Variables // 
      JACOCO_GROUPID            = "org.jacoco"               // required
      JACOCO_ARTIFACT_ID        = "jacoco-maven-plugin"      // required
      JACOCO_VERSION            = "0.8.7"                    // required
      JACOCO_GOAL               = "prepare-agent"            // required
 
-                      // ## Maven Variables ##
+                      // Maven Variables //
      MAVEN_SKIP_TESTS          = "true"                     // Defaults to 'true'
      MAVEN_GOALS               = "clean package"            // Defaults to 'clean package'
 
                       // Sonarqube Variables //
      SONARQUBEAPI              = "sonarqube-server"         // Must be set in (Manage Jenkins --> System)
      SCANNER_HOME              = tool 'sonarscanner'        // Must be set in (Manage Jenkins --> Tools)
-     TIMEOUT_MINUTES           = 10                         // For Sonarqube Quality gate
+     TIMEOUT_MINUTES           = 10                         // For Sonarqube Quality gate (Default is 5 Minutes)
 
-                      // ## Docker Hub Registry Variables ##
+                      // Docker Hub Registry Variables //
      DOCKER_REPO_URI           = "docker.io"                // Defaults to 'docker.io'
      DOCKER_HUB_CREDENTIALS_ID = "docker-prod-creds"
 
-                      // ## ECR Variables ##
+                      // ECR Variables //
      AWS_ACCOUNT_ID            = ""                         // required
      REGION                    = "ap-south-1"               // Defaults to 'ap-south-1'
-     ECR_REPO_URI              = "${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
+     ECR_REPO_URI              ="${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
      AWS_CREDENTIALS_ID        = "aws-prod-creds"
                               
-                      // ## Trivy FS Variables ##  
+                      // Trivy FS Variables //  
      MODE                      = "fs"                       // fs --- file system 
      TARGET                    = "."                        // Defaults to "." current directory
      OUTPUT_REPORT_FORMAT      = "table"                    // table/json/sarif/yaml
 
-                      // ## Trivy IMAGE Variables ##  
+                      // Trivy IMAGE Variables  
      MODE                      = "image"                    // image scan
-     TARGET                    = "${PROJECT_NAME}-${COMPONENT}:${MY_GIT_LATEST_COMMIT_ID}"     // Can be set in stage
+     TARGET                    = "${PROJECT_NAME}-${COMPONENT}:${MY_GIT_LATEST_COMMIT_ID}"     // Can be set in stage if you require
      OUTPUT_REPORT_FORMAT      = "table"                    // table/json/sarif/yaml
-        
-                      // ## Email Variables ##
+
+                      // Email Variables //
      FROM_MAIL     = ""                                     // required
      TO_MAIL       = ""                                     // required
      REPLY_TO_MAIL = ""                                     // required
      CC_MAIL       = ""                                     // Defaults to null
      BCC_MAIL      = ""                                     // Defaults to null
-     ATTACHMENTS   = ""                                     // Defaults to null  ("trivy-reports/*, owasp-reports/*, surefire-reports/*.xml")
+     ATTACHMENTS   = ""                                     // Defaults to null  // "trivy-reports/*, owasp-reports/*, surefire-reports/*.xml"
+
+                      // Nexus Variables //
+     NEXUS_HOST            = '13.235.95.123'                    // required
+     NEXUS_PORT            = '8081'                             // required
+     NEXUS_PROTOCOL        = 'http'                             // required
+     NEXUS_VERSION         = 'nexus3'                           // required
+
+     NEXUS_BASE_REPO       = 'vprofile'                         // required
+     NEXUS_SNAP_REPO       = "${NEXUS_BASE_REPO}-SNAPSHOT"      // required
+     NEXUS_RELEASE_REPO    = "${NEXUS_BASE_REPO}-RELEASE"       // required
+     NEXUS_GRP_REPO        = "${NEXUS_BASE_REPO}-maven-group"   // required
+
+     NEXUS_GRP_ID          = 'QA'                               // required
+     NEXUS_CREDENTIALS_ID  = 'nexus-creds'                      // required
+     NEXUS_CREDENTIALS     = credentials('nexus-creds')         // required
+     NEXUS_ARTIFACT_VERSION = "${BUILD_ID}-${BUILD_TIMESTAMP}"      // Requires "Build Timestamp" plugin
+
+                      // Deployment.yml image update //
+     GIT_COMMITTER_NAME           = env.GIT_COMMITTER_NAME                        // required (git config username)
+     GIT_COMMITTER_EMAIL          = env.GIT_COMMITTER_EMAIL                       // required (git config email)
+     DEPLOY_GITHUB_CREDENTIALS    = credentials("DEPLOY_GITHUB_CREDENTIALS")      // required
+     DEPLOY_GITHUB_REPO_NAME      = "kubernetes-deploy"                           // required
+     IMAGE_NAME                   = "${PROJECT_NAME}-${COMPONENT}"                // required (format 'expense-backend')
+     DEPLOYMENT_FILE              = "deployment.yml"                              // required
+     DEPLOYMENT_FILE_GIT_BRANCH   = "main"                                        // Defaults to main
+     
     }
 
     stages {
         stage ("PRINT LATEST COMMIT ID") { steps { script { echo "Latest Commit ID: ${env.MY_GIT_LATEST_COMMIT_ID}" } } } 
 
-        stage ("GIT CHECKOUT") { steps { script { git_checkout() } } }
+        stage ("GIT CHECKOUT") { steps { script { gitCheckout() } } }
 
-        stage ("JACOCO CODE COVERAGE") { steps { script { jacoco_code_coverage() } } }
+        stage ("JACOCO CODE COVERAGE") { steps { script { jacocoCodeCoverage() } } }
 
-        stage ("TRIVY - FILE SYSTEM SCAN") { steps { script { trivy_scan() } } }
+        stage ("TRIVY - FILE SYSTEM SCAN") { steps { script { trivyScan() } } }
 
         stage ("SONARQUBE SCAN") { steps { script { sonarqubeScan() } } }
 
         stage ("SONARQUBE QUALITY GATE") { steps { script { sonarqubeQualityGate() } } }
 
+        stage ("MAVEN BUILD") { steps { script { mavenBuild() } } }
+
+        stage ("NEXUS UPLOAD") { steps { script { nexusUpload() } } }
+
         stage ("DOCKER IMAGE BUILD") { steps { script{ dockerImageBuild() } } }
 
-        stage ("TRIVY - IMAGE SCAN") { steps { script { trivy_scan() } } }
+        stage ("TRIVY - IMAGE SCAN") { steps { script { trivyScan() } } }
 
         stage ("DOCKER HUB PUSH") { steps { script { dockerPush() } } }
 
         stage ("ECR PUSH") { steps { script { ecrPush() } } }
     }
     post { always { script { sendEmail() } } }
+
 }
