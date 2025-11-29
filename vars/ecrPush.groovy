@@ -3,7 +3,7 @@ def call(Map config = [:]) {
 	def required = ["PROJECT_NAME", "COMPONENT", "MY_GIT_LATEST_COMMIT_ID", "REGION", "ECR_REPO_URI", "AWS_CREDENTIALS_ID"]
     required.each { key ->
         if (!config[key]) {
-            error "❌ IMAGE REGISTRY: Missing required parameter '${key}'"
+            error "❌ ECR REGISTRY: Missing required parameter '${key}'"
         }
     }
 	
