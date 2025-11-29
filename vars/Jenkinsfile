@@ -19,7 +19,7 @@ pipeline {
         
                       // ## Git Variables ## 
      MY_GIT_URL                = "https://github.com/vaheedgithubac/DevOps-Project-Two-Tier-Flask-App.git"
-     MY_GIT_REPO_TYPE          = "public"                   // public or private
+     MY_GIT_REPO_TYPE          = "public"                   // required (public or private)
      MY_GIT_CREDENTIALS_ID     = ""                         // required for private repos
      MY_GIT_BRANCH             = ""                         // Defaults to "main" if not set
      MY_GIT_LATEST_COMMIT_ID   = get_latest_short_commit()  // <-- calls call() from shared library
@@ -41,7 +41,7 @@ pipeline {
                       // ## ECR Variables ##
      AWS_ACCOUNT_ID            = ""                         // required
      REGION                    = "ap-south-1"               // Defaults to 'ap-south-1'
-     ECR_REPO_URI              ="${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
+     ECR_REPO_URI              = "${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
      AWS_CREDENTIALS_ID        = "aws-prod-creds"
                               
                       // ## Trivy FS Variables ##  
@@ -60,7 +60,7 @@ pipeline {
      REPLY_TO_MAIL = ""                                     // required
      CC_MAIL       = ""                                     // Defaults to null
      BCC_MAIL      = ""                                     // Defaults to null
-     ATTACHMENTS   = ""                                     // Defaults to null  // "trivy-reports/*, owasp-reports/*, surefire-reports/*.xml"
+     ATTACHMENTS   = ""                                     // Defaults to null  ("trivy-reports/*, owasp-reports/*, surefire-reports/*.xml")
     }
 
     stages {
