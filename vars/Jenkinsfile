@@ -20,9 +20,29 @@ pipeline {
                       // ## Git Variables ## 
      MY_GIT_URL                = "https://github.com/vaheedgithubac/DevOps-Project-Two-Tier-Flask-App.git"
      MY_GIT_REPO_TYPE          = "public"                   // public or private
-     MY_GIT_CREDENTIALS_ID     = ""                         // Must be set for private repos
+     MY_GIT_CREDENTIALS_ID     = ""                         // Should be set for private repos
      MY_GIT_BRANCH             = ""                         // Defaults to "main" if not set
      MY_GIT_LATEST_COMMIT_ID   = get_latest_short_commit()  // <-- calls call() from shared library
+
+                      // ## Jacoco Variables ## 
+     JACOCO_GROUPID            = "org.jacoco"               // Must be set
+     JACOCO_ARTIFACT_ID        = "jacoco-maven-plugin"      // Must be set
+     JACOCO_VERSION            = "0.8.7"                    // Must be set
+     JACOCO_GOAL               = "prepare-agent"            // Must be set
+
+                      // ## Maven Variables ##
+     MAVEN_SKIP_TESTS          = "true"                     // Defaults to 'true'
+     MAVEN_GOALS               = "clean package"            // Defaults to 'clean package'
+
+                      // ## Docker Hub Registry Variables ##
+     DOCKER_REPO_URI           = "docker.io"                // Defaults to 'docker.io'
+     DOCKER_HUB_CREDENTIALS_ID = "docker-prod-creds"
+
+                      // ## ECR Variables ##
+     AWS_ACCOUNT_ID            = ""                         // Must be set
+     REGION                    = "ap-south-1"               // Defaults to 'ap-south-1'
+     ECR_REPO_URI              ="${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
+     AWS_CREDENTIALS_ID        = "aws-prod-creds"
                               
                       // ## Trivy FS Variables ##  
      MODE                      = "fs"                       // fs --- file system 
@@ -31,7 +51,7 @@ pipeline {
 
                       // ## Trivy IMAGE Variables ##  
      MODE                      = "image"                    // image scan
-     TARGET                    = ""                         // Must be set in stage
+     TARGET                    = "${PROJECT_NAME}-${COMPONENT}:${MY_GIT_LATEST_COMMIT_ID}"     // Can be set in stage
      OUTPUT_REPORT_FORMAT      = "table"                    // table/json/sarif/yaml
      
     }
@@ -41,15 +61,16 @@ pipeline {
 
         stage ("GIT CHECKOUT") { steps { script { git_checkout() } } }
 
+        stage ("JACOCO CODE COVERAGE") { steps { script { jacoco_code_coverage() } } }
+
         stage ("TRIVY - FILE SYSTEM SCAN") { steps { script { trivy_scan() } } }
 
-        stage ("TRIVY - IMAGE SCAN") {
-            steps {
-                script {
-                    env.TARGET = ""   // image name with Tag should be set here 
-                    trivy_scan()
-                }
-            }
-        }
+        stage ("DOCKER IMAGE BUILD") { steps { script{ dockerImageBuild() } } }
+
+        stage ("TRIVY - IMAGE SCAN") { steps { script { trivy_scan() } } }
+
+        stage ("DOCKER HUB PUSH") { steps { script { dockerPush() } } }
+
+        stage ("ECR PUSH") { steps { script { ecrPush() } } }
     }
 }
