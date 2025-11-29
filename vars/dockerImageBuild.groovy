@@ -11,6 +11,6 @@ def call(Map config = [:]) {
     def imageTag      = env.MY_GIT_LATEST_COMMIT_ID
 
     echo "🔨 Building Docker Image"
-    sh "docker build . -t ${component}:${imageTag}"
+    sh "docker build . -t ${projectName}-${component}:${imageTag}"
     echo "✅ Docker Image successfully built"
 }
