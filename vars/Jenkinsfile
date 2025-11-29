@@ -20,7 +20,7 @@ pipeline {
                       // ## Git Variables ## 
      MY_GIT_URL                = "https://github.com/vaheedgithubac/DevOps-Project-Two-Tier-Flask-App.git"
      MY_GIT_REPO_TYPE          = "public"                   // public or private
-     MY_GIT_CREDENTIALS_ID     = ""                         // Should be set for private repos
+     MY_GIT_CREDENTIALS_ID     = ""                         // Must be set for private repos
      MY_GIT_BRANCH             = ""                         // Defaults to "main" if not set
      MY_GIT_LATEST_COMMIT_ID   = get_latest_short_commit()  // <-- calls call() from shared library
                               
@@ -31,7 +31,7 @@ pipeline {
 
                       // ## Trivy IMAGE Variables ##  
      MODE                      = "image"                    // image scan
-     TARGET                    = ""                         // Should be set in stage
+     TARGET                    = ""                         // Must be set in stage
      OUTPUT_REPORT_FORMAT      = "table"                    // table/json/sarif/yaml
      
     }
