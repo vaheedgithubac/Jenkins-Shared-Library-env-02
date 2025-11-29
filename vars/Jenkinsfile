@@ -34,6 +34,10 @@ pipeline {
      MAVEN_SKIP_TESTS          = "true"                     // Defaults to 'true'
      MAVEN_GOALS               = "clean package"            // Defaults to 'clean package'
 
+                      // Sonarqube Variables //
+     SONARQUBEAPI              = "sonarqube-server"         // Must be set in (Manage Jenkins --> System)
+     SCANNER_HOME              = tool 'sonarscanner'        // Must be set in (Manage Jenkins --> Tools)
+
                       // ## Docker Hub Registry Variables ##
      DOCKER_REPO_URI           = "docker.io"                // Defaults to 'docker.io'
      DOCKER_HUB_CREDENTIALS_ID = "docker-prod-creds"
