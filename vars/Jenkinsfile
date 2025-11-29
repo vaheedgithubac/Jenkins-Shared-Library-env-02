@@ -53,7 +53,14 @@ pipeline {
      MODE                      = "image"                    // image scan
      TARGET                    = "${PROJECT_NAME}-${COMPONENT}:${MY_GIT_LATEST_COMMIT_ID}"     // Can be set in stage
      OUTPUT_REPORT_FORMAT      = "table"                    // table/json/sarif/yaml
-     
+        
+                      // ## Email Variables ##
+     FROM_MAIL     = ""                                     // required
+     TO_MAIL       = ""                                     // required
+     REPLY_TO_MAIL = ""                                     // required
+     CC_MAIL       = ""                                     // Defaults to null
+     BCC_MAIL      = ""                                     // Defaults to null
+     ATTACHMENTS   = ""                                     // Defaults to null  // "trivy-reports/*, owasp-reports/*, surefire-reports/*.xml"
     }
 
     stages {
@@ -73,4 +80,5 @@ pipeline {
 
         stage ("ECR PUSH") { steps { script { ecrPush() } } }
     }
+    post { always { script { sendEmail() } } }
 }
