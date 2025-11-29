@@ -83,7 +83,7 @@ pipeline {
      NEXUS_CREDENTIALS     = credentials('nexus-creds')         // required
      NEXUS_ARTIFACT_VERSION = "${BUILD_ID}-${BUILD_TIMESTAMP}"      // Requires "Build Timestamp" plugin
 
-                      // Deployment.yml image update //
+                      // Deployment.yml image update Variables //
      GIT_COMMITTER_NAME           = env.GIT_COMMITTER_NAME                        // required (git config username)
      GIT_COMMITTER_EMAIL          = env.GIT_COMMITTER_EMAIL                       // required (git config email)
      DEPLOY_GITHUB_CREDENTIALS    = credentials("DEPLOY_GITHUB_CREDENTIALS")      // required
