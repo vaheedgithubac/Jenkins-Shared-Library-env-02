@@ -68,5 +68,5 @@ def call(Map config = [:]) {
             {target}   
     """
 
-    echo "✅ Trivy scan completed successfully. Report stored at: '{output_report}'"
+    echo "✅ Trivy scan completed successfully. Report stored at: '${output_report}'"
 }
