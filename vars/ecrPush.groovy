@@ -7,7 +7,7 @@ def call(Map config = [:]) {
         }
     }
 
-    def region        = config.REGION
+    def region        = config.REGION ?: "ap-south-1"
     def ecrRepoUri    = config.ECR_REPO_URI
     def credentialsId = config.AWS_CREDENTIALS_ID
 
