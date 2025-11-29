@@ -1,11 +1,14 @@
 def call(Map config = [:]) {
-    def requiredDocker = ["DOCKER_HUB_CREDENTIALS_ID", "DOCKER_REPO_URI"]
+    def requiredDocker = ["PROJECT_NAME", "COMPONENT", "MY_GIT_LATEST_COMMIT_ID", "DOCKER_HUB_CREDENTIALS_ID", "DOCKER_REPO_URI"]
     requiredDocker.each { key ->
         if (!config[key]) {
             error "❌ IMAGE REGISTRY: Missing required parameter '${key}'"
         }
     }
-    
+
+    def projectName   = config.PROJECT_NAME
+    def component     = config.COMPONENT
+    def imageTag      = config.MY_GIT_LATEST_COMMIT_ID 
     def credentialsId = config.DOCKER_HUB_CREDENTIALS_ID
     def dockerRepoUri = config.DOCKER_REPO_URI ?: "docker.io"   
 
