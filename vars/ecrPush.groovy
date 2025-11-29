@@ -1,12 +1,15 @@
 def call(Map config = [:]) {
 
-	def required = ["REGION", "ECR_REPO_URI", "AWS_CREDENTIALS_ID"]
+	def required = ["PROJECT_NAME", "COMPONENT", "MY_GIT_LATEST_COMMIT_ID", "REGION", "ECR_REPO_URI", "AWS_CREDENTIALS_ID"]
     required.each { key ->
         if (!config[key]) {
             error "❌ IMAGE REGISTRY: Missing required parameter '${key}'"
         }
     }
-
+	
+    def projectName   = config.PROJECT_NAME
+    def component     = config.COMPONENT
+    def imageTag      = config.MY_GIT_LATEST_COMMIT_ID 
     def region        = config.REGION ?: "ap-south-1"
     def ecrRepoUri    = config.ECR_REPO_URI
     def credentialsId = config.AWS_CREDENTIALS_ID
@@ -14,7 +17,7 @@ def call(Map config = [:]) {
     withAWS(credentials: credentialsId, region: "${region}") {  // Plugin: AWS steps
         sh """
             echo "Tagging docker image"
-            docker tag ${component}:${imageTag} ${ecrRepoUri}/${projectName}-${component}:${imageTag}
+            docker tag ${projectName}-${component}:${imageTag} ${ecrRepoUri}/${projectName}-${component}:${imageTag}
 
             echo "Logging into ECR"
             set +x
