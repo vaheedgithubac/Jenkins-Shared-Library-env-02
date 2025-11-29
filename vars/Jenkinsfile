@@ -76,6 +76,8 @@ pipeline {
 
         stage ("TRIVY - FILE SYSTEM SCAN") { steps { script { trivy_scan() } } }
 
+        stage ("SONARQUBE SCAN") { steps { script { sonarqubeScan() } } }
+
         stage ("DOCKER IMAGE BUILD") { steps { script{ dockerImageBuild() } } }
 
         stage ("TRIVY - IMAGE SCAN") { steps { script { trivy_scan() } } }
