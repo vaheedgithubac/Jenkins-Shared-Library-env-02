@@ -37,6 +37,7 @@ pipeline {
                       // Sonarqube Variables //
      SONARQUBEAPI              = "sonarqube-server"         // Must be set in (Manage Jenkins --> System)
      SCANNER_HOME              = tool 'sonarscanner'        // Must be set in (Manage Jenkins --> Tools)
+     TIMEOUT_MINUTES           = 10                         // For Sonarqube Quality gate
 
                       // ## Docker Hub Registry Variables ##
      DOCKER_REPO_URI           = "docker.io"                // Defaults to 'docker.io'
@@ -78,7 +79,7 @@ pipeline {
 
         stage ("SONARQUBE SCAN") { steps { script { sonarqubeScan() } } }
 
-        stage ("SONARQUBE QUALITY GATE") { steps { script { sonarqubeQualityGate(timeoutMinutes: 10) } } }
+        stage ("SONARQUBE QUALITY GATE") { steps { script { sonarqubeQualityGate() } } }
 
         stage ("DOCKER IMAGE BUILD") { steps { script{ dockerImageBuild() } } }
 
