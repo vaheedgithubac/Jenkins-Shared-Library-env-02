@@ -22,9 +22,9 @@ def call(Map config = [:]) {
     else if (my_git_repo_type == "private") {
     	     if (!env.MY_GIT_CREDENTIALS_ID || env.MY_GIT_CREDENTIALS_ID.trim() == "") {
               error "❌ MY_GIT_CREDENTIALS_ID is required for private repositories."
-           }
+             }
            // else leave as is
-         }
+          }
     else { error "❌ MY_GIT_REPO_TYPE must be 'public' or 'private'. Current: '${config.MY_GIT_REPO_TYPE}'" }
 
 
