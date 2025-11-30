@@ -2,8 +2,8 @@ def call(Map config = [:]) {
     echo "MY_GIT_URL: ${env.MY_GIT_URL}"
     echo "MY_GIT_REPO_TYPE: ${env.MY_GIT_REPO_TYPE}"
     
-    def MY_GIT_URL = ${env.MY_GIT_URL}
-    def MY_GIT_REPO_TYPE = ${env.MY_GIT_REPO_TYPE}
+    def MY_GIT_URL       = env.MY_GIT_URL
+    def MY_GIT_REPO_TYPE = env.MY_GIT_REPO_TYPE
     
     // Required config parameters
     def requiredEnvParams = [ "MY_GIT_URL", "MY_GIT_REPO_TYPE" ]
