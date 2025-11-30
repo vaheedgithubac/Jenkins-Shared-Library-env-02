@@ -72,7 +72,7 @@ def call(Map config = [:]) {
         echo "Checked out Branch: '${my_git_branch}' from ${my_git_url} Successfully..."
         echo "Latest CommitId = ${commitId}"
     
-        env.MY_GIT_LATEST_COMMIT_ID = commitId
+        //env.MY_GIT_LATEST_COMMIT_ID = commitId
         return commitId
     
 }
