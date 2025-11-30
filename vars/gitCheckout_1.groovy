@@ -27,7 +27,7 @@ def call(Map config = [:]) {
         my_git_credentials_id = null
     } 
     if (my_git_repo_type == "private") {
-       if (!my_git_credentials_id ){           // || my_git_credentials_id?.trim().toLowerCase() == "null" || my_git_credentials_id?.trim() == "") {
+       if (!my_git_credentials_id || my_git_credentials_id?.trim().toLowerCase() == "null" || my_git_credentials_id?.trim() == "") {
            echo "⚡ Private repo detected, git credentials needed"
            error "❌ MY_GIT_CREDENTIALS_ID is required for private repositories."
            }
