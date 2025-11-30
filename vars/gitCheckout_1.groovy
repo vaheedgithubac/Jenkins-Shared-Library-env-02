@@ -39,7 +39,7 @@ def call(Map config = [:]) {
     echo "✔ MY_GIT_BRANCH         = ${my_git_branch}"
     echo "✔ MY_GIT_CREDENTIALS_ID = ${my_git_credentials_id}"
 
-    /*
+    
     // === Perform Git Checkout === 
     git(
         url: my_git_url,
@@ -47,6 +47,6 @@ def call(Map config = [:]) {
         credentialsId: my_git_credentials_id
     )
     
-    echo "Checked out Branch:'${env.MY_GIT_BRANCH}' from ${my_git_url} Successfully..."
-    */
+    echo "Checked out Branch:'${my_git_branch}' from ${my_git_url} Successfully..."
+    
 }
