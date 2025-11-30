@@ -1,4 +1,5 @@
 def call(Map config = [:]) {
+    dir(env.WORKSPACE){
     echo "MY_GIT_URL: ${env.MY_GIT_URL}"
     echo "MY_GIT_REPO_TYPE: ${env.MY_GIT_REPO_TYPE}"
     
@@ -57,5 +58,5 @@ def call(Map config = [:]) {
     )
     
     echo "Checked out Branch: '${my_git_branch}' from ${my_git_url} Successfully..."
-    
+    } 
 }
