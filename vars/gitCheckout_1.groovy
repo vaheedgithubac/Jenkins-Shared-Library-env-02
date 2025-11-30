@@ -31,7 +31,7 @@ def call(Map config = [:]) {
            error "❌ MY_GIT_CREDENTIALS_ID is required for private repositories."
            }
        }
-    if (!(repo in ['private', 'public'])) { error "❌ MY_GIT_REPO_TYPE must be 'public' or 'private'. Current: '${my_git_repo_type}'" }
+    if (!(my_git_repo_type in ['private', 'public'])) { error "❌ MY_GIT_REPO_TYPE must be 'public' or 'private'. Current: '${my_git_repo_type}'" }
 
     // === Log final values === 
     echo "✔ MY_GIT_URL            = ${my_git_url}"
