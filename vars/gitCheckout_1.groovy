@@ -61,7 +61,6 @@ def call(Map config = [:]) {
     
     // === Perform Git Checkout ===
     def commitId = "no-SHA"
-    dir(env.WORKSPACE) {
     git(
         url: my_git_url,
         branch: my_git_branch,
@@ -72,7 +71,8 @@ def call(Map config = [:]) {
         commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
         echo "Checked out Branch: '${my_git_branch}' from ${my_git_url} Successfully..."
         echo "Latest CommitId = ${commitId}"
-    }
+    
+        env.MY_GIT_LATEST_COMMIT_ID = commitId
         return commitId
     
 }
