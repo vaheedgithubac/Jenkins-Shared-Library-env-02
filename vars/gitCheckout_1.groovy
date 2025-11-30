@@ -19,7 +19,7 @@ def call(Map config = [:]) {
     
     // ?.trim() prevents NullPointerException. Handles literal "null", empty string, and real null.
 
-    echo "Before Setting:  MY_GIT_BRANCH = ${env.MY_GIT_BRANCH}    MY_GIT_CREDENTIALS_ID = $env.MY_GIT_CREDENTIALS_ID}   NO_VAR = {env.NO_VAR}"
+    echo "Before Setting:  MY_GIT_BRANCH = ${env.MY_GIT_BRANCH}    MY_GIT_CREDENTIALS_ID = ${env.MY_GIT_CREDENTIALS_ID}   NO_VAR = ${env.NO_VAR}"
     
     echo "After Setting"
     def my_git_branch    = env.MY_GIT_BRANCH ?: 'main'
