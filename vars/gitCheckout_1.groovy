@@ -11,46 +11,27 @@ def call(Map config = [:]) {
             error "❌ GIT: Missing required ENV parameter '${key}'"
         }
     }
-
-  
-        
+ 
     def my_git_repo_type = env.MY_GIT_REPO_TYPE.toLowerCase().trim()
     def my_git_url       = env.MY_GIT_URL.trim()
     
-    // ?.trim() prevents NullPointerException. Handles literal "null", empty string, and real null.
-
-    echo "Before Setting:  MY_GIT_BRANCH = ${env.MY_GIT_BRANCH}    MY_GIT_CREDENTIALS_ID = ${env.MY_GIT_CREDENTIALS_ID}   NO_VAR = ${env.NO_VAR}"
-    
-    echo "After Setting"
+    // Set defaults for optional    
     def my_git_branch    = env.MY_GIT_BRANCH ?: 'main'
     def my_git_credentials_id = env.MY_GIT_CREDENTIALS_ID ?: null
-    def no_var = env.NO_VAR ?: 'novalue'
+    
 
-    echo "my_git_branch: ${my_git_branch}"
-    echo "my_git_credentials_id: ${my_git_credentials_id}"
-    echo "no_var: ${no_var}"
-
-    /*
+   
     // === Handle credentials === 
     if (my_git_repo_type == "public") {
         echo "⚡ Public repo detected, setting MY_GIT_CREDENTIALS_ID = null"
         my_git_credentials_id     = null
-        env.MY_GIT_CREDENTIALS_ID = null
     } 
-    else if (my_git_repo_type == "private") {
-    	     if (!my_git_credentials_id || my_git_credentials_id?.trim().toLowerCase() == "null" || my_git_credentials_id?.trim() == "") {
-              error "❌ MY_GIT_CREDENTIALS_ID is required for private repositories."
-             }
-           // else leave as is
-          }
-    else { error "❌ MY_GIT_REPO_TYPE must be 'public' or 'private'. Current: '${config.MY_GIT_REPO_TYPE}'" }
-
-    // === Set Default Branch to 'main' === 
-    if (!my_git_branch || my_git_branch?.trim().toLowerCase() == "null" || my_git_branch?.trim() == "") {
-        echo "⚡ MY_GIT_BRANCH not defined, setting default branch to 'main'"
-        my_git_branch     = "main"
-        env.MY_GIT_BRANCH = "main"
-    } 
+    if (my_git_repo_type == "private") {
+       if (!my_git_credentials_id ){           // || my_git_credentials_id?.trim().toLowerCase() == "null" || my_git_credentials_id?.trim() == "") {
+           error "❌ MY_GIT_CREDENTIALS_ID is required for private repositories."
+           }
+       }
+    if (!(repo in ['private', 'public'])) { error "❌ MY_GIT_REPO_TYPE must be 'public' or 'private'. Current: '${my_git_repo_type}'" }
 
     // === Log final values === 
     echo "✔ MY_GIT_URL            = ${my_git_url}"
@@ -58,6 +39,7 @@ def call(Map config = [:]) {
     echo "✔ MY_GIT_BRANCH         = ${env.MY_GIT_BRANCH}"
     echo "✔ MY_GIT_CREDENTIALS_ID = ${env.MY_GIT_CREDENTIALS_ID}"
 
+    /*
     // === Perform Git Checkout === 
     git(
         url: my_git_url,
