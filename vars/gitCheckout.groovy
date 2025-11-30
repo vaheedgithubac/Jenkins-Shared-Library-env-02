@@ -18,7 +18,7 @@ def call(Map config = [:]) {
     // ?.trim() prevents NullPointerException. Handles literal "null", empty string, and real null.
 
     def my_git_branch    = env.MY_GIT_BRANCH 
-    def my_git_credentials_id = MY_GIT_CREDENTIALS_ID
+    def my_git_credentials_id = env.MY_GIT_CREDENTIALS_ID
     
     // === Handle credentials === 
     if (my_git_repo_type == "public") {
