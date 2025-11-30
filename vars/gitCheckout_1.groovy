@@ -59,12 +59,13 @@ def call(Map config = [:]) {
     echo "✔ MY_GIT_CREDENTIALS_ID = ${my_git_credentials_id}"
 
     
-    // === Perform Git Checkout === 
+    // === Perform Git Checkout ===
+    dir(env.WOEKSPACE) {
     git(
         url: my_git_url,
         branch: my_git_branch,
         credentialsId: my_git_credentials_id
-    )
+    ) }
     
     echo "Checked out Branch: '${my_git_branch}' from ${my_git_url} Successfully..."
     
