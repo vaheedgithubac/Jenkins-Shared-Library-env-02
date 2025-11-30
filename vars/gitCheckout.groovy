@@ -21,7 +21,7 @@ def call(Map config = [:]) {
         env.MY_GIT_CREDENTIALS_ID = null
     } 
     else if (my_git_repo_type == "private") {
-    	     if (!env.MY_GIT_CREDENTIALS_ID || env.MY_GIT_BRANCH == "null" || env.MY_GIT_CREDENTIALS_ID.trim() == "") {
+    	     if (!env.MY_GIT_CREDENTIALS_ID || env.MY_GIT_BRANCH.trim().toLowerCase() == "null" || env.MY_GIT_CREDENTIALS_ID.trim() == "") {
               error "❌ MY_GIT_CREDENTIALS_ID is required for private repositories."
              }
            // else leave as is
