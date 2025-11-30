@@ -65,10 +65,14 @@ def call(Map config = [:]) {
         url: my_git_url,
         branch: my_git_branch,
         credentialsId: my_git_credentials_id
-    ) }
+    ) 
     
-    echo "Checked out Branch: '${my_git_branch}' from ${my_git_url} Successfully..."
-    // Explicitly capture the commit SHA
-    env.GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+        // Capture Latest Commit ID
+        def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        echo "Checked out Branch: '${my_git_branch}' from ${my_git_url} Successfully..."
+        echo "Latest CommitId = ${commitId}"
+
+        return commitId
+    }
     
 }
