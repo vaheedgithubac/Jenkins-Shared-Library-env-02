@@ -16,13 +16,16 @@ def call(Map config = [:]) {
     def my_git_url       = env.MY_GIT_URL.trim()
     // def my_git_branch    = env.MY_GIT_BRANCH ?: "main"
 
+    // ?.trim() prevents NullPointerException.
+    // Handles literal "null", empty string, and real null.
+
     // === Handle credentials === 
     if (my_git_repo_type == "public") {
         echo "⚡ Public repo detected, setting MY_GIT_CREDENTIALS_ID = null"
         env.MY_GIT_CREDENTIALS_ID = null
     } 
     else if (my_git_repo_type == "private") {
-    	     if (!env.MY_GIT_CREDENTIALS_ID || env.MY_GIT_CREDENTIALS_ID == null || env.MY_GIT_CREDENTIALS_ID.trim().toLowerCase() == "null" || env.MY_GIT_CREDENTIALS_ID.trim() == "") {
+    	     if (!env.MY_GIT_CREDENTIALS_ID || env.MY_GIT_CREDENTIALS_ID?.trim().toLowerCase() == "null" || env.MY_GIT_CREDENTIALS_ID?.trim() == "") {
               error "❌ MY_GIT_CREDENTIALS_ID is required for private repositories."
              }
            // else leave as is
@@ -30,8 +33,7 @@ def call(Map config = [:]) {
     else { error "❌ MY_GIT_REPO_TYPE must be 'public' or 'private'. Current: '${config.MY_GIT_REPO_TYPE}'" }
 
     // === Set Default Branch to 'main' === 
-    
-    if (!env.MY_GIT_BRANCH || env.MY_GIT_BRANCH == null || env.MY_GIT_BRANCH.trim() == "" || env.MY_GIT_BRANCH.trim().toLowerCase() == "null") {
+    if (!env.MY_GIT_BRANCH || env.MY_GIT_BRANCH?.trim().toLowerCase() == "null" || env.MY_GIT_BRANCH?.trim() == "") {
         echo "⚡ MY_GIT_BRANCH not defined, setting default branch to 'main'"
         env.MY_GIT_BRANCH = "main"
     } 
