@@ -22,7 +22,7 @@ def call(Map config = [:]) {
         env.MY_GIT_CREDENTIALS_ID = null
     } 
     else if (my_git_repo_type == "private") {
-    	     if (!env.MY_GIT_CREDENTIALS_ID || env.MY_GIT_BRANCH.trim().toLowerCase() == "null" || env.MY_GIT_CREDENTIALS_ID.trim() == "") {
+    	     if (!env.MY_GIT_CREDENTIALS_ID || env.MY_GIT_CREDENTIALS_ID == null || env.MY_GIT_CREDENTIALS_ID.trim().toLowerCase() == "null" || env.MY_GIT_CREDENTIALS_ID.trim() == "") {
               error "❌ MY_GIT_CREDENTIALS_ID is required for private repositories."
              }
            // else leave as is
@@ -31,10 +31,16 @@ def call(Map config = [:]) {
 
     // === Set Default Branch to 'main' === 
     
-    if (!env.MY_GIT_BRANCH || env.MY_GIT_BRANCH.trim() == "" || env.MY_GIT_BRANCH.trim().toLowerCase() == "null") {
+    if (!env.MY_GIT_BRANCH || env.MY_GIT_BRANCH == null || env.MY_GIT_BRANCH.trim() == "" || env.MY_GIT_BRANCH.trim().toLowerCase() == "null") {
         echo "⚡ MY_GIT_BRANCH not defined, setting default branch to 'main'"
         env.MY_GIT_BRANCH = "main"
     } 
+
+    /*
+    if (branchRaw == null || branchRaw.toString().trim() == "" || branchRaw.toString().trim().toLowerCase() == "null") {
+        echo "⚡ MY_GIT_BRANCH not defined, setting default branch to 'main'"
+        env.MY_GIT_BRANCH = "main"
+    }*/
 
     // === Log final values === 
     echo "✔ MY_GIT_URL            = ${my_git_url}"
