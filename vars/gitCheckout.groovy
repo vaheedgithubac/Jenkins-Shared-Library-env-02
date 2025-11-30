@@ -14,18 +14,21 @@ def call(Map config = [:]) {
         
     def my_git_repo_type = env.MY_GIT_REPO_TYPE.toLowerCase().trim()
     def my_git_url       = env.MY_GIT_URL.trim()
-    def my_git_branch    = env.MY_GIT_BRANCH 
-
+    
     // ?.trim() prevents NullPointerException.
     // Handles literal "null", empty string, and real null.
 
+    def my_git_branch    = env.MY_GIT_BRANCH 
+    def my_git_credentials_id = MY_GIT_CREDENTIALS_ID
+    
     // === Handle credentials === 
     if (my_git_repo_type == "public") {
         echo "⚡ Public repo detected, setting MY_GIT_CREDENTIALS_ID = null"
+        my_git_credentials_id     = null
         env.MY_GIT_CREDENTIALS_ID = null
     } 
     else if (my_git_repo_type == "private") {
-    	     if (!env.MY_GIT_CREDENTIALS_ID || env.MY_GIT_CREDENTIALS_ID?.trim().toLowerCase() == "null" || env.MY_GIT_CREDENTIALS_ID?.trim() == "") {
+    	     if (!my_git_credentials_id || my_git_credentials_id?.trim().toLowerCase() == "null" || my_git_credentials_id?.trim() == "") {
               error "❌ MY_GIT_CREDENTIALS_ID is required for private repositories."
              }
            // else leave as is
@@ -33,8 +36,9 @@ def call(Map config = [:]) {
     else { error "❌ MY_GIT_REPO_TYPE must be 'public' or 'private'. Current: '${config.MY_GIT_REPO_TYPE}'" }
 
     // === Set Default Branch to 'main' === 
-    if (!env.MY_GIT_BRANCH || env.MY_GIT_BRANCH?.trim().toLowerCase() == "null" || env.MY_GIT_BRANCH?.trim() == "") {
+    if (!my_git_branch || my_git_branch?.trim().toLowerCase() == "null" || my_git_branch?.trim() == "") {
         echo "⚡ MY_GIT_BRANCH not defined, setting default branch to 'main'"
+        my_git_branch     = "main"
         env.MY_GIT_BRANCH = "main"
     } 
 
@@ -53,8 +57,8 @@ def call(Map config = [:]) {
     // === Perform Git Checkout === 
     git(
         url: my_git_url,
-        branch: env.MY_GIT_BRANCH,
-        credentialsId: env.MY_GIT_CREDENTIALS_ID
+        branch: my_git_branch,
+        credentialsId: my_git_credentials_id
     )
     
     echo "Checked out Branch:'${env.MY_GIT_BRANCH}' from ${my_git_url} Successfully..."
