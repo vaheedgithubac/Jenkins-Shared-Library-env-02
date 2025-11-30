@@ -68,5 +68,7 @@ def call(Map config = [:]) {
     ) }
     
     echo "Checked out Branch: '${my_git_branch}' from ${my_git_url} Successfully..."
+    // Explicitly capture the commit SHA
+    env.GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
     
 }
