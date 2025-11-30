@@ -4,6 +4,8 @@
 }*/
 
 def call() {
+    sh "git config --global --add safe.directory ${env.WORKSPACE}"
+
     try {
         // Ensure we run in workspace (where gitCheckout_1 checked out)
         dir(env.WORKSPACE) {
