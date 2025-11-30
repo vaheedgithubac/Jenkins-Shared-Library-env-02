@@ -60,7 +60,7 @@ def call(Map config = [:]) {
 
     
     // === Perform Git Checkout ===
-    def commitId = "no-SHA"
+    // def commitId = "no-SHA"
     git(
         url: my_git_url,
         branch: my_git_branch,
@@ -70,9 +70,9 @@ def call(Map config = [:]) {
         // Capture Latest Commit ID
         commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
         echo "Checked out Branch: '${my_git_branch}' from ${my_git_url} Successfully..."
-        echo "Latest CommitId = ${commitId}"
+        echo "From Shared Library Latest CommitId = ${commitId}"
     
         //env.MY_GIT_LATEST_COMMIT_ID = commitId
-        return commitId
+        // return commitId
     
 }
