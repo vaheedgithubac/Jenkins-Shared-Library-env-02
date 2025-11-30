@@ -56,6 +56,6 @@ def call(Map config = [:]) {
         credentialsId: my_git_credentials_id
     )
     
-    echo "Checked out Branch:'${my_git_branch}' from ${my_git_url} Successfully..."
+    echo "Checked out Branch: '${my_git_branch}' from ${my_git_url} Successfully..."
     
 }
