@@ -14,6 +14,7 @@ def call(Map config = [:]) {
         
     def my_git_repo_type = env.MY_GIT_REPO_TYPE.trim().toLowerCase().trim()
     def my_git_url       = env.MY_GIT_URL.trim()
+    def my_git_branch    = env.MY_GIT_BRANCH.trim() ?: "main"
 
     // === Handle credentials === 
     if (my_git_repo_type == "public") {
@@ -28,12 +29,12 @@ def call(Map config = [:]) {
           }
     else { error "❌ MY_GIT_REPO_TYPE must be 'public' or 'private'. Current: '${config.MY_GIT_REPO_TYPE}'" }
 
-
     // === Set Default Branch to 'main' === 
+    /*
     if (!env.MY_GIT_BRANCH || env.MY_GIT_BRANCH.trim() == "" || env.MY_GIT_BRANCH.trim().toLowerCase() == "null") {
         echo "⚡ MY_GIT_BRANCH not defined, setting default branch to 'main'"
         env.MY_GIT_BRANCH = "main"
-    }
+    } */
 
     // === Log final values === 
     echo "✔ MY_GIT_URL            = ${my_git_url}"
