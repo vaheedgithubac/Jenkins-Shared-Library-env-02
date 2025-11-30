@@ -30,7 +30,7 @@ def call(Map config = [:]) {
 
 
     // === Set Default Branch to 'main' === 
-    if (!env.MY_GIT_BRANCH || env.MY_GIT_BRANCH.trim() == "") {
+    if (!env.MY_GIT_BRANCH || env.MY_GIT_BRANCH.trim() == "" || env.MY_GIT_BRANCH.trim().toLowerCase() == "null") {
         echo "⚡ MY_GIT_BRANCH not defined, setting default branch to 'main'"
         env.MY_GIT_BRANCH = "main"
     }
