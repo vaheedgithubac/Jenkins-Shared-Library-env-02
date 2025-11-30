@@ -60,7 +60,7 @@ def call(Map config = [:]) {
 
     
     // === Perform Git Checkout ===
-    dir(env.WOEKSPACE) {
+    dir(env.WORKSPACE) {
     git(
         url: my_git_url,
         branch: my_git_branch,
