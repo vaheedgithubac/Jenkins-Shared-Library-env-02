@@ -12,9 +12,9 @@ def call(Map config = [:]) {
         }
     }
         
-    def my_git_repo_type = env.MY_GIT_REPO_TYPE.trim().toLowerCase().trim()
+    def my_git_repo_type = env.MY_GIT_REPO_TYPE.toLowerCase().trim()
     def my_git_url       = env.MY_GIT_URL.trim()
-    // def my_git_branch    = env.MY_GIT_BRANCH ?: "main"
+    def my_git_branch    = env.MY_GIT_BRANCH 
 
     // ?.trim() prevents NullPointerException.
     // Handles literal "null", empty string, and real null.
