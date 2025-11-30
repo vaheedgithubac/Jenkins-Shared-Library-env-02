@@ -12,7 +12,7 @@ def call(Map config = [:]) {
         }
     }
 
-  /*
+  
         
     def my_git_repo_type = env.MY_GIT_REPO_TYPE.toLowerCase().trim()
     def my_git_url       = env.MY_GIT_URL.trim()
@@ -21,7 +21,11 @@ def call(Map config = [:]) {
 
     def my_git_branch    = env.MY_GIT_BRANCH ?: 'main'
     def my_git_credentials_id = env.MY_GIT_CREDENTIALS_ID ?: null
-    
+
+    echo "my_git_branch: ${my_git_branch}"
+    echo "my_git_credentials_id: ${my_git_credentials_id}"
+
+    /*
     // === Handle credentials === 
     if (my_git_repo_type == "public") {
         echo "⚡ Public repo detected, setting MY_GIT_CREDENTIALS_ID = null"
