@@ -9,12 +9,18 @@ def call(Map config = [:]) {
     def requiredEnvParams = [ "MY_GIT_URL", "MY_GIT_REPO_TYPE" ]
 
     // Validate required parameters
+    /*
     requiredEnvParams.each { key ->
         if (!config[key]) {
             error "❌ GIT: Missing required parameter '${key}'"
         }
+    }*/
+    
+    requiredEnvParams.each { key ->
+        if (!requiredEnvParams[key]) {
+            error "❌ GIT: Missing required parameter '${key}'"
+        }
     }
-
     def my_git_repo_type = config.MY_GIT_REPO_TYPE.trim().toLowerCase().trim()
     def my_git_url       = config.MY_GIT_URL.trim()
 
