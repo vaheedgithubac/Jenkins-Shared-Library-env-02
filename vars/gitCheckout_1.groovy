@@ -22,7 +22,7 @@ def call(Map config = [:]) {
 
    
     // === Handle credentials === 
-    if (my_git_repo_type == "public") { echo "⚡ Public repo detected, git credentials not needed" } 
+    if (my_git_repo_type == "public") { echo "⚡ Public repo detected, git credentials not needed to clone the repo" } 
     if (my_git_repo_type == "private") {
        /*
        if (!my_git_credentials_id || my_git_credentials_id?.trim().toLowerCase() == "null" || my_git_credentials_id?.trim() == "") {
