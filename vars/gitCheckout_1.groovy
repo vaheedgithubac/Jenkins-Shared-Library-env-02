@@ -36,8 +36,8 @@ def call(Map config = [:]) {
     // === Log final values === 
     echo "✔ MY_GIT_URL            = ${my_git_url}"
     echo "✔ MY_GIT_REPO_TYPE      = ${my_git_repo_type}"
-    echo "✔ MY_GIT_BRANCH         = ${env.MY_GIT_BRANCH}"
-    echo "✔ MY_GIT_CREDENTIALS_ID = ${env.MY_GIT_CREDENTIALS_ID}"
+    echo "✔ MY_GIT_BRANCH         = ${my_git_branch}"
+    echo "✔ MY_GIT_CREDENTIALS_ID = ${my_git_credentials_id}"
 
     /*
     // === Perform Git Checkout === 
