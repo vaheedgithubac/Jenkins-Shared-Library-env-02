@@ -2,28 +2,18 @@ def call(Map config = [:]) {
     echo "MY_GIT_URL: ${env.MY_GIT_URL}"
     echo "MY_GIT_REPO_TYPE: ${env.MY_GIT_REPO_TYPE}"
     
-    def MY_GIT_URL       = env.MY_GIT_URL
-    def MY_GIT_REPO_TYPE = env.MY_GIT_REPO_TYPE
-    
-    // Required config parameters
+    // Required ENV parameters
     def requiredEnvParams = [ "MY_GIT_URL", "MY_GIT_REPO_TYPE" ]
-
-    // Validate required parameters
-    /*
+   
+   // Validate ENV parameters
     requiredEnvParams.each { key ->
-        if (!config[key]) {
-            error "❌ GIT: Missing required parameter '${key}'"
-        }
-    }*/
-    
-    requiredEnvParams.each { key ->
-        if (!requiredEnvParams[key]) {
-            error "❌ GIT: Missing required parameter '${key}'"
+        if (!env[key] || env[key].trim() == "") {
+            error "❌ GIT: Missing required ENV parameter '${key}'"
         }
     }
-    def my_git_repo_type = config.MY_GIT_REPO_TYPE.trim().toLowerCase().trim()
-    def my_git_url       = config.MY_GIT_URL.trim()
-
+        
+    def my_git_repo_type = env.MY_GIT_REPO_TYPE.trim().toLowerCase().trim()
+    def my_git_url       = env.MY_GIT_URL.trim()
 
     // === Handle credentials === 
     if (my_git_repo_type == "public") {
