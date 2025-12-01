@@ -49,7 +49,7 @@ def call(Map config = [:]) {
     echo "File Last Modified: ${filesByGlob[0].lastModified}"
 
     def artifactPath = filesByGlob[0].path;
-    def artifactExists = steps.fileExists(artifactPath)
+    def artifactExists = fileExists(artifactPath)
     def final_nexus_repo = pom_version.endsWith("SNAPSHOT") ? "${nexus_base_repo}-SNAPSHOT" : "${nexus_base_repo}-RELEASE"
 
     echo "📤 Uploading to Nexus repository: ${final_nexus_repo}"
@@ -71,7 +71,7 @@ def call(Map config = [:]) {
                 type: pom_packaging]
             ]
         )
-        echo "✅ Nexus upload complete."
+        echo "✅ Nexus upload successfully completed."
     } 
     else { error "❌*** File: ${artifactPath}, could not be found" }
 }
